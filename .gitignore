@@ -1,7 +1,28 @@
-node_modules
+# Dependencies
+node_modules/
+collab-backend/node_modules/
+collab-frontend/collab-frontend/node_modules/
+
+# Environment variables — NEVER commit these
 .env
+collab-backend/.env
+
+# Build output
+dist/
+build/
+collab-frontend/collab-frontend/dist/
+
+# Logs
 *.log
-dist
-dist-ssr
-*.local
+npm-debug.log*
+
+# OS
 .DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Migration helper (not needed in prod)
+collab-backend/migrate.js

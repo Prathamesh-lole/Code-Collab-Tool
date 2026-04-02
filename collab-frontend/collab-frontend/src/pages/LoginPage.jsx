@@ -10,6 +10,7 @@ function LoginPage() {
   });
 
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -81,15 +82,25 @@ function LoginPage() {
 
           <div style={fieldStyle}>
             <label style={labelStyle}>Password</label>
-            <input
-              type="password"
-              name="password"
-              placeholder="••••••••"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              style={inputStyle}
-            />
+            <div style={inputWrapperStyle}>
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="••••••••"
+                value={formData.password}
+                onChange={handleChange}
+                required
+                style={{ ...inputStyle, paddingRight: "42px" }}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((v) => !v)}
+                style={eyeButtonStyle}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? "🙈" : "👁️"}
+              </button>
+            </div>
           </div>
 
           <button type="submit" style={submitButtonStyle} disabled={loading}>
@@ -210,6 +221,26 @@ const inputStyle = {
   fontSize: "14px",
   outline: "none",
   transition: "border-color 0.2s",
+  width: "100%",
+  boxSizing: "border-box",
+};
+
+const inputWrapperStyle = {
+  position: "relative",
+  display: "flex",
+  alignItems: "center",
+};
+
+const eyeButtonStyle = {
+  position: "absolute",
+  right: "10px",
+  background: "none",
+  border: "none",
+  cursor: "pointer",
+  fontSize: "16px",
+  padding: "0",
+  lineHeight: 1,
+  color: "#8b949e",
 };
 
 const submitButtonStyle = {
