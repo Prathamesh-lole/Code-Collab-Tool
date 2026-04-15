@@ -74,7 +74,7 @@ function RoomPage() {
 
   const fetchRoomData = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/rooms/key/${roomKey}`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/rooms/key/${roomKey}`);
       const data = await response.json();
 
       if (!response.ok) {
@@ -91,7 +91,7 @@ function RoomPage() {
       }
 
       // Load files for this room
-      const filesRes = await fetch(`http://localhost:5000/api/rooms/${roomKey}/files`);
+      const filesRes = await fetch(`${import.meta.env.VITE_API_URL}/api/rooms/${roomKey}/files`);
       const filesData = await filesRes.json();
       if (filesData.length > 0) {
         setFiles(filesData);
@@ -110,7 +110,7 @@ function RoomPage() {
 
   const saveCodeToDatabase = async (updatedCode) => {
     try {
-      await fetch(`http://localhost:5000/api/rooms/key/${roomKey}/code`, {
+      await fetch(`${import.meta.env.VITE_API_URL}/api/rooms/key/${roomKey}/code`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -124,7 +124,7 @@ function RoomPage() {
 
   const saveLanguageToDatabase = async (updatedLanguage) => {
     try {
-      await fetch(`http://localhost:5000/api/rooms/key/${roomKey}/language`, {
+      await fetch(`${import.meta.env.VITE_API_URL}/api/rooms/key/${roomKey}/language`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -140,7 +140,7 @@ function RoomPage() {
   const handleCreateFile = async () => {
     const name = newFileName.trim();
     if (!name) return;
-    const res = await fetch(`http://localhost:5000/api/rooms/${roomKey}/files`, {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/rooms/${roomKey}/files`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, language }),
@@ -165,7 +165,7 @@ function RoomPage() {
   const handleDeleteFile = async (fileId, e) => {
     e.stopPropagation();
     if (files.length === 1) return; // keep at least one file
-    await fetch(`http://localhost:5000/api/rooms/files/${fileId}`, { method: "DELETE" });
+    await fetch(`${import.meta.env.VITE_API_URL}/api/rooms/files/${fileId}`, { method: "DELETE" });
     const remaining = files.filter((f) => f.id !== fileId);
     setFiles(remaining);
     if (activeFileId === fileId) {
@@ -193,7 +193,7 @@ function RoomPage() {
 
     saveCodeToDatabase(newCode);
     if (activeFileId) {
-      fetch(`http://localhost:5000/api/rooms/files/${activeFileId}/code`, {
+      fetch(`${import.meta.env.VITE_API_URL}/api/rooms/files/${activeFileId}/code`, {
         method: "PUT", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ code: newCode }),
       }).catch(() => {});
@@ -212,7 +212,7 @@ function RoomPage() {
 
     saveLanguageToDatabase(newLanguage);
     if (activeFileId) {
-      fetch(`http://localhost:5000/api/rooms/files/${activeFileId}/language`, {
+      fetch(`${import.meta.env.VITE_API_URL}/api/rooms/files/${activeFileId}/language`, {
         method: "PUT", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ language: newLanguage }),
       }).catch(() => {});
@@ -224,7 +224,7 @@ function RoomPage() {
       setRunning(true);
       setOutput("Running code...");
 
-      const response = await fetch("http://localhost:5000/api/code/run", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/code/run`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -438,7 +438,7 @@ function RoomPage() {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    socketRef.current = io("http://localhost:5000", {
+    socketRef.current = io(import.meta.env.VITE_API_URL, {
       auth: {
         token,
       },
