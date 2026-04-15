@@ -1,89 +1,167 @@
-# CodeCollab — Real-Time Code Collaboration Tool
+# 🚀 Real-Time Code Collaboration Platform
 
-A full-stack real-time collaborative code editor built with React, Node.js, Socket.IO, and Monaco Editor.
+A full-stack, production-ready web application that enables multiple users to **collaborate on code in real-time**, similar to Google Docs and VS Code Live Share.  
 
-## Features
+Users can join shared rooms, write code together, communicate via chat, track each other's cursor movements, and execute code instantly — all in a seamless and interactive environment.
 
-- Real-time code sync across all users
-- Multi-language support: JavaScript, Python, Java, C++, C, TypeScript
-- Code execution engine (JS runs locally, others via Judge0 CE)
-- Live cursor tracking with colored labels per user
-- Multi-file tabs per room
-- Real-time chat with typing indicators
-- Voice & video calling via WebRTC
-- User presence (join/leave toasts, online list)
-- JWT authentication
+---
 
-## Project Structure
+## 🌟 Key Features
 
-```
-collab-backend/    → Express + Socket.IO + MySQL
-collab-frontend/   → React + Vite + Monaco Editor
-```
+### 👥 Real-Time Collaboration
+- Multi-user coding in shared rooms
+- Join via unique Room Key or shareable link
+- Live user presence tracking
 
-## Setup
+### ⚡ Live Code Synchronization
+- Instant code updates across all users
+- Conflict-free real-time editing
+- Language synchronization
 
-### Backend
+### 🧑‍💻 Advanced Code Editor
+- Monaco Editor (VS Code-like experience)
+- Syntax highlighting & IntelliSense
+- Supports multiple languages:
+  - JavaScript
+  - Python
+  - Java
+  - C++
+  - C
+  - TypeScript
+
+### 💬 Real-Time Chat System
+- Instant messaging within rooms
+- Typing indicators
+- Timestamped messages
+- Sender identification
+
+### 🎯 Cursor Tracking (Google Docs Style)
+- Live cursor movement tracking
+- Unique color for each user
+- Username labels near cursors
+
+### ▶️ Code Execution Engine
+- Execute code in real-time
+- Multi-language support
+- Custom input (stdin)
+- Output shared with all participants
+
+### 🔐 Authentication & Security
+- Secure login/signup system
+- JWT-based authentication
+- Protected routes and sessions
+
+### 🎨 Modern UI/UX
+- Responsive design (desktop + mobile)
+- User avatars
+- Highlight active user
+- Smooth interactions and animations
+
+### 🚀 Performance Optimizations
+- Debounced socket events
+- Optimized rendering
+- Efficient state management
+
+---
+
+## 🛠️ Tech Stack
+
+### 🎨 Frontend
+- React.js
+- Monaco Editor
+- Socket.IO Client
+- React Router
+- CSS (Custom styling)
+
+### ⚙️ Backend
+- Node.js
+- Express.js
+- Socket.IO
+
+### 🗄️ Database
+- MongoDB (Mongoose ODM)
+
+### 🔐 Authentication
+- JSON Web Token (JWT)
+
+Frontend (React + Monaco Editor)
+↓
+Socket.IO (WebSockets)
+↓
+Backend (Node.js + Express)
+↓
+MongoDB (Database)
+
+
+---
+
+## ⚙️ Application Flow
+
+### 🔹 1. Authentication
+- User signs up or logs in
+- JWT token is generated and stored
+
+---
+
+### 🔹 2. Room Management
+- User creates or joins a room using a unique Room Key
+- Room data is fetched from the database
+
+---
+
+### 🔹 3. Real-Time Collaboration
+
+#### Code Sync Flow:
+
+User A types → Socket emit → Server → Broadcast → User B updates
+
+
+#### Chat Flow:
+
+User sends message → Server → Broadcast → All users receive
+
+
+#### Cursor Tracking Flow:
+
+User moves cursor → Emit → Server → Broadcast → Render for others
+
+
+---
+
+### 🔹 4. Code Execution
+
+Frontend → API → Backend → Execute → Return Output → Broadcast
+
+
+---
+
+### 🔹 5. Data Persistence
+- Code and language stored in MongoDB
+- Room state maintained across sessions
+
+---
+
+## 📦 Installation & Setup
+
+### 🔹 1. Clone the Repository
 
 ```bash
-cd collab-backend
+git clone https://github.com/your-username/real-time-code-collab.git
+cd real-time-code-collab
+🔹 2. Backend Setup
+cd backend
 npm install
-cp .env.example .env   # fill in your values
-npm run dev
-```
 
-### Frontend
+Create .env file:
 
-```bash
-cd collab-frontend/collab-frontend
+PORT=5000
+MONGO_URI=your_mongodb_uri
+JWT_SECRET=your_secret_key
+
+Run backend:
+
+npm start
+🔹 3. Frontend Setup
+cd frontend
 npm install
-npm run dev
-```
-
-### Database
-
-Run this SQL to create the required tables:
-
-```sql
-CREATE DATABASE collab_code;
-USE collab_code;
-
-CREATE TABLE users (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(100),
-  email VARCHAR(100) UNIQUE,
-  password VARCHAR(255),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE rooms (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  room_name VARCHAR(100),
-  room_key VARCHAR(20) UNIQUE,
-  created_by INT,
-  code LONGTEXT,
-  language VARCHAR(30) DEFAULT 'javascript',
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE files (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  room_key VARCHAR(20) NOT NULL,
-  name VARCHAR(100) NOT NULL,
-  language VARCHAR(30) DEFAULT 'javascript',
-  code LONGTEXT,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  INDEX idx_room_key (room_key)
-);
-```
-
-## Tech Stack
-
-| Layer | Tech |
-|-------|------|
-| Frontend | React 19, Vite, Monaco Editor, Socket.io-client |
-| Backend | Node.js, Express, Socket.IO |
-| Database | MySQL |
-| Auth | JWT |
-| Code Execution | vm2 (JS), Judge0 CE API (others) |
-| Real-time | WebRTC (voice/video), Socket.IO (sync) |
+npm start
