@@ -382,13 +382,12 @@ function RoomPage() {
 
   const handleJoinCall = async () => {
     try {
+      console.log("[WebRTC] Requesting media...");
       const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      console.log("[WebRTC] Got stream:", stream.getTracks());
       localStreamRef.current = stream;
-      if (localVideoRef.current) {
-        localVideoRef.current.srcObject = stream;
-        localVideoRef.current.play().catch(() => {});
-      }
       setInCall(true);
+      console.log("[WebRTC] setInCall(true) called, localVideoRef:", localVideoRef.current);
 
       // Initiate offer to every user already in the room
       const otherUsers = users.filter((u) => u.socketId !== socketRef.current?.id);
@@ -583,6 +582,25 @@ function RoomPage() {
       }
     };
   }, [roomKey]);
+
+  // Attach local stream to video element after inCall becomes true and DOM is ready
+  useEffect(() => {
+    if (!inCall || !localStreamRef.current) return;
+    const tryAttach = () => {
+      const el = localVideoRef.current;
+      console.log("[WebRTC] useEffect inCall — el:", el, "stream:", localStreamRef.current);
+      if (el) {
+        el.srcObject = localStreamRef.current;
+        el.play()
+          .then(() => console.log("[WebRTC] play() succeeded"))
+          .catch((e) => console.error("[WebRTC] play() failed:", e));
+      } else {
+        console.warn("[WebRTC] localVideoRef.current is null after inCall=true");
+      }
+    };
+    const t = setTimeout(tryAttach, 100);
+    return () => clearTimeout(t);
+  }, [inCall]);
 
   if (!joined) {
     return (
@@ -889,13 +907,7 @@ function RoomPage() {
                   {/* Local video */}
                   <div style={videoTileStyle}>
                     <video
-                      ref={(el) => {
-                        localVideoRef.current = el;
-                        if (el && localStreamRef.current && el.srcObject !== localStreamRef.current) {
-                          el.srcObject = localStreamRef.current;
-                          el.play().catch(() => {});
-                        }
-                      }}
+                      ref={localVideoRef}
                       autoPlay muted playsInline style={videoStyle}
                     />
                     <span style={videoLabelStyle}>You</span>
