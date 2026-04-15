@@ -239,7 +239,7 @@ function RoomPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        const errorOutput = data.message || "Execution failed";
+        const errorOutput = data.output || data.message || "Execution failed";
         setOutput(errorOutput);
 
         if (socketRef.current) {
@@ -384,7 +384,10 @@ function RoomPage() {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
       localStreamRef.current = stream;
-      if (localVideoRef.current) localVideoRef.current.srcObject = stream;
+      if (localVideoRef.current) {
+        localVideoRef.current.srcObject = stream;
+        localVideoRef.current.play().catch(() => {});
+      }
       setInCall(true);
 
       // Initiate offer to every user already in the room
@@ -885,7 +888,16 @@ function RoomPage() {
                 <div style={videoGridStyle}>
                   {/* Local video */}
                   <div style={videoTileStyle}>
-                    <video ref={localVideoRef} autoPlay muted playsInline style={videoStyle} />
+                    <video
+                      ref={(el) => {
+                        localVideoRef.current = el;
+                        if (el && localStreamRef.current && el.srcObject !== localStreamRef.current) {
+                          el.srcObject = localStreamRef.current;
+                          el.play().catch(() => {});
+                        }
+                      }}
+                      autoPlay muted playsInline style={videoStyle}
+                    />
                     <span style={videoLabelStyle}>You</span>
                   </div>
                   {/* Remote videos */}
@@ -893,7 +905,12 @@ function RoomPage() {
                     <div key={sid} style={videoTileStyle}>
                       <video
                         autoPlay playsInline style={videoStyle}
-                        ref={(el) => { if (el && el.srcObject !== stream) el.srcObject = stream; }}
+                        ref={(el) => {
+                          if (el && el.srcObject !== stream) {
+                            el.srcObject = stream;
+                            el.play().catch(() => {});
+                          }
+                        }}
                       />
                       <span style={videoLabelStyle}>{name}</span>
                     </div>
