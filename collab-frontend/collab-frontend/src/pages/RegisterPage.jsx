@@ -97,9 +97,10 @@ function RegisterPage() {
       setErrors({ general: "Google Sign-In is not available. Please try again." });
       return;
     }
-
+    if (googleLoading) return;
     setGoogleLoading(true);
 
+    window.google.accounts.id.cancel();
     window.google.accounts.id.initialize({
       client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
       callback: async (response) => {
@@ -109,15 +110,12 @@ function RegisterPage() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ credential: response.credential }),
           });
-
           const data = await res.json();
-
           if (!res.ok) {
             setErrors({ general: data.message || "Google login failed" });
             setGoogleLoading(false);
             return;
           }
-
           localStorage.setItem("token", data.token);
           localStorage.setItem("user", JSON.stringify(data.user));
           navigate("/home");
@@ -127,9 +125,11 @@ function RegisterPage() {
         }
       },
     });
-
-    window.google.accounts.id.prompt();
-    setGoogleLoading(false);
+    window.google.accounts.id.prompt((notification) => {
+      if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+        setGoogleLoading(false);
+      }
+    });
   };
 
   return (

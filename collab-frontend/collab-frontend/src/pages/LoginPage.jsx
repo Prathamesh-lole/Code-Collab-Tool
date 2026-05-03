@@ -66,7 +66,10 @@ function LoginPage() {
       setError("Google Sign-In is not available. Please try again.");
       return;
     }
+    if (googleLoading) return;
     setGoogleLoading(true);
+
+    window.google.accounts.id.cancel();
     window.google.accounts.id.initialize({
       client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
       callback: async (response) => {
@@ -87,8 +90,11 @@ function LoginPage() {
         }
       },
     });
-    window.google.accounts.id.prompt();
-    setGoogleLoading(false);
+    window.google.accounts.id.prompt((notification) => {
+      if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+        setGoogleLoading(false);
+      }
+    });
   };
 
   return (
