@@ -7,16 +7,25 @@ const { OAuth2Client } = require("google-auth-library");
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // ── Email transporter ──────────────────────────────────────────
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+const createTransporter = () => {
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) return null;
+  return nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
+};
 
 // ── Send welcome email ─────────────────────────────────────────
 const sendWelcomeEmail = async (name, email) => {
+  const transporter = createTransporter();
+  if (!transporter) {
+    console.log("Email not configured — skipping welcome email");
+    return;
+  }
+
   const mailOptions = {
     from: `"CodeCollab" <${process.env.EMAIL_USER}>`,
     to: email,
