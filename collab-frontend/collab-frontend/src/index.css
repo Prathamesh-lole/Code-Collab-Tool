@@ -1,16 +1,107 @@
-*,
-*::before,
-*::after {
+/* ═══════════════════════════════════════════════════════════
+   CODE//FLOW — Global Design System
+   ═══════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* ── CSS Variables ── */
+:root {
+  /* Canvas */
+  --canvas:          #070707;
+  --surface-editor:  #0D0D0D;
+  --surface-panel:   #121212;
+  --surface-elevated:#181818;
+  --surface-modal:   #1C1C1C;
+
+  /* Borders */
+  --border:          #242424;
+  --border-subtle:   #1A1A1A;
+  --border-focus:    #3B82F6;
+
+  /* Text */
+  --text-primary:    #F5F5F5;
+  --text-secondary:  #8B8B8B;
+  --text-muted:      #4A4A4A;
+  --text-code:       #E2E8F0;
+
+  /* Accents */
+  --accent-blue:     #3B82F6;
+  --accent-emerald:  #10B981;
+  --accent-pink:     #EC4899;
+  --accent-cyan:     #06B6D4;
+  --accent-amber:    #F59E0B;
+  --accent-red:      #EF4444;
+
+  /* Collaborator colors */
+  --collab-1:        #EC4899;
+  --collab-2:        #06B6D4;
+  --collab-3:        #10B981;
+  --collab-4:        #F59E0B;
+  --collab-5:        #3B82F6;
+
+  /* Semantic */
+  --success:         #10B981;
+  --error:           #EF4444;
+  --warning:         #F59E0B;
+
+  /* Typography */
+  --font-ui:         'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+  --font-mono:       'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+
+  /* Spacing scale */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* Radius */
+  --radius-sm:  6px;
+  --radius-md:  10px;
+  --radius-lg:  14px;
+  --radius-xl:  20px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.5), 0 1px 2px rgba(0,0,0,0.6);
+  --shadow-md:  0 4px 16px rgba(0,0,0,0.6), 0 2px 6px rgba(0,0,0,0.5);
+  --shadow-lg:  0 12px 40px rgba(0,0,0,0.7), 0 4px 16px rgba(0,0,0,0.5);
+  --shadow-xl:  0 24px 64px rgba(0,0,0,0.8), 0 8px 24px rgba(0,0,0,0.6);
+  --shadow-glow-blue:    0 0 20px rgba(59,130,246,0.3);
+  --shadow-glow-emerald: 0 0 20px rgba(16,185,129,0.3);
+  --shadow-glow-pink:    0 0 20px rgba(236,72,153,0.2);
+
+  /* Transitions */
+  --transition-fast:   0.12s ease;
+  --transition-base:   0.2s ease;
+  --transition-slow:   0.35s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* ── Reset ── */
+*, *::before, *::after {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', Arial, sans-serif;
+  font-family: var(--font-ui);
+  background: var(--canvas);
+  color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #0d1117;
+  line-height: 1.5;
+  overflow-x: hidden;
 }
 
 #root {
@@ -20,14 +111,133 @@ body {
   flex-direction: column;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  margin: 0;
-}
+/* ── Typography ── */
+h1, h2, h3, h4, h5, h6 { font-family: var(--font-ui); font-weight: 700; line-height: 1.2; }
+p  { line-height: 1.6; }
+code, pre, kbd { font-family: var(--font-mono); }
 
-p {
-  margin: 0;
-}
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: var(--radius-full); }
+::-webkit-scrollbar-thumb:hover { background: #333; }
 
+/* ── Selection ── */
+::selection { background: rgba(59,130,246,0.25); color: var(--text-primary); }
+
+/* ── Focus visible ── */
+:focus-visible { outline: 2px solid var(--accent-blue); outline-offset: 2px; }
+
+/* ── Global link ── */
+a { color: var(--accent-blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── Animations ── */
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px currentColor; }
+  50%       { opacity: 0.6; box-shadow: 0 0 12px currentColor; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in-right {
+  from { opacity: 0; transform: translateX(16px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+@keyframes ping {
+  75%, 100% { transform: scale(2); opacity: 0; }
+}
+
+@keyframes gradient-shift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ── Utility classes ── */
+.cf-spin    { animation: spin 0.8s linear infinite; }
+.cf-fade-in { animation: fade-in 0.25s ease forwards; }
+.cf-slide-up{ animation: slide-up 0.3s ease forwards; }
+
+/* ── Input base reset ── */
+input, textarea, select, button {
+  font-family: var(--font-ui);
+  font-size: 14px;
+}
+
+button { cursor: pointer; }
+
+/* ── Ambient radial background ── */
+.cf-ambient {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 800px 600px at 20% 10%, rgba(59,130,246,0.04) 0%, transparent 70%),
+    radial-gradient(ellipse 600px 500px at 80% 90%, rgba(16,185,129,0.03) 0%, transparent 70%),
+    radial-gradient(ellipse 500px 400px at 60% 40%, rgba(236,72,153,0.02) 0%, transparent 70%);
+}
+
+/* ── Grid overlay ── */
+.cf-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--border-subtle) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
+  background-size: 48px 48px;
+  opacity: 0.5;
+}
+
+/* ── Glass surface ── */
+.cf-glass {
+  background: rgba(18,18,18,0.85);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--border);
+}
+
+/* ── Live dot ── */
+.cf-live-dot {
+  position: relative;
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.cf-live-dot::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  animation: ping 1.5s cubic-bezier(0,0,0.2,1) infinite;
+  background: inherit;
+}
+
+/* ── Code token colors (for static display) ── */
+.token-keyword  { color: #EC4899; }
+.token-type     { color: #06B6D4; }
+.token-string   { color: #10B981; }
+.token-number   { color: #F59E0B; }
+.token-comment  { color: #4A5568; font-style: italic; }
+.token-fn       { color: #3B82F6; }

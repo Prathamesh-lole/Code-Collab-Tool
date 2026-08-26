@@ -3,6 +3,8 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import HomePage from "./pages/HomePage";
 import RoomPage from "./pages/RoomPage";
+import LandingPage from "./pages/LandingPage";
+import "./App.css";
 
 function PrivateRoute({ children }) {
   const token = localStorage.getItem("token");
@@ -12,7 +14,7 @@ function PrivateRoute({ children }) {
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/login" replace />} />
+      <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
 

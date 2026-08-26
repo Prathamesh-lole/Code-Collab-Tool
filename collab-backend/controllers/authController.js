@@ -130,8 +130,11 @@ exports.register = async (req, res) => {
     db.query(
       "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
       [name.trim(), email.toLowerCase(), hashedPassword],
-      async (err2, insertResult) => {
-        if (err2) return res.status(500).json({ message: "Failed to create account" });
+      (err2) => {
+        if (err2) {
+          console.error("Insert error:", err2.message);
+          return res.status(500).json({ message: "Failed to create account: " + err2.message });
+        }
 
         // Send welcome email (non-blocking)
         sendWelcomeEmail(name.trim(), email.toLowerCase());
