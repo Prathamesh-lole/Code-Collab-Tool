@@ -1,4 +1,4 @@
-# Code-Collab — Real-Time Collaborative Studio
+#  🚀 Code-Collab — Real-Time Collaborative Studio
 
 A full-stack, production-ready web application that enables multiple users to collaborate on code in real-time, similar to Google Docs and VS Code Live Share. Users can join shared rooms, write code together, communicate via chat, track each other's cursor movements, and execute code instantly.
 
