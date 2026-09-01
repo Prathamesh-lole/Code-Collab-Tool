@@ -54,6 +54,23 @@ app.get("/", (req, res) => {
   res.send("Server is running");
 });
 
+app.get("/health", (req, res) => {
+  db.query("SELECT 1", (err) => {
+    if (err) {
+      return res.status(500).json({
+        status: "error",
+        database: "disconnected",
+        error: err.message,
+      });
+    }
+    res.json({
+      status: "ok",
+      database: "connected",
+      timestamp: new Date().toISOString(),
+    });
+  });
+});
+
 const io = new Server(server, {
   cors: {
     origin: function(origin, callback) {
