@@ -14,6 +14,7 @@ if (process.env.DATABASE_URL) {
       user: url.username,
       password: url.password,
       database: url.pathname.replace("/", ""),
+      ssl: { rejectUnauthorized: false },
     };
   } catch (e) {
     console.error("Invalid DATABASE_URL format:", e.message);
