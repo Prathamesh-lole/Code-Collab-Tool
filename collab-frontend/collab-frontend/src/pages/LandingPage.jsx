@@ -206,7 +206,10 @@ export default function LandingPage() {
           </button>
 
           <button
-            onClick={() => navigate("/home")}
+            onClick={() => {
+              const el = document.getElementById("features");
+              if (el) el.scrollIntoView({ behavior: "smooth" });
+            }}
             style={s.ctaSecondary}
             onMouseEnter={(e) => {
               e.currentTarget.style.borderColor = "#3A3A3A";
