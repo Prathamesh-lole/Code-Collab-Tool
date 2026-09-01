@@ -16,9 +16,10 @@ const app = express();
 const server = http.createServer(app);
 
 const allowedOrigins = [
-  process.env.FRONTEND_URL ? process.env.FRONTEND_URL.trim() : null,
+  process.env.FRONTEND_URL ? process.env.FRONTEND_URL.trim().replace(/\/$/, "") : null,
   "http://localhost:5173",
   "http://localhost:5174",
+  "https://code-collab-tool.vercel.app",
 ].filter(Boolean);
 
 const isAllowedOrigin = (origin) => {
@@ -52,23 +53,6 @@ app.use("/api/rooms", fileRoutes);
 
 app.get("/", (req, res) => {
   res.send("Server is running");
-});
-
-app.get("/health", (req, res) => {
-  db.query("SELECT 1", (err) => {
-    if (err) {
-      return res.status(500).json({
-        status: "error",
-        database: "disconnected",
-        error: err.message,
-      });
-    }
-    res.json({
-      status: "ok",
-      database: "connected",
-      timestamp: new Date().toISOString(),
-    });
-  });
 });
 
 const io = new Server(server, {
