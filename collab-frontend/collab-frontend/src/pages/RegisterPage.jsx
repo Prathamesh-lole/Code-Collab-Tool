@@ -78,33 +78,47 @@ function RegisterPage() {
     setLoading(false);
   };
 
+  const handleGoogleCallback = async (response) => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/google`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ credential: response.credential }),
+      });
+      const data = await res.json();
+      if (!res.ok) { setErrors({ general: data.message || "Google login failed" }); setGoogleLoading(false); return; }
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      navigate("/home");
+    } catch (err) {
+      setErrors({ general: "Google login failed. Please try again." });
+      setGoogleLoading(false);
+    }
+  };
+
   const handleGoogleLogin = () => {
     if (!window.google) { setErrors({ general: "Google Sign-In is not available. Please try again." }); return; }
     if (googleLoading) return;
     setGoogleLoading(true);
-    window.google.accounts.id.cancel();
     window.google.accounts.id.initialize({
       client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
-      callback: async (response) => {
-        try {
-          const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/google`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ credential: response.credential }),
-          });
-          const data = await res.json();
-          if (!res.ok) { setErrors({ general: data.message || "Google login failed" }); setGoogleLoading(false); return; }
-          localStorage.setItem("token", data.token);
-          localStorage.setItem("user", JSON.stringify(data.user));
-          navigate("/home");
-        } catch (err) {
-          setErrors({ general: "Google login failed. Please try again." });
-          setGoogleLoading(false);
-        }
-      },
+      callback: handleGoogleCallback,
+      ux_mode: "popup",
     });
     window.google.accounts.id.prompt((notification) => {
-      if (notification.isNotDisplayed() || notification.isSkippedMoment()) setGoogleLoading(false);
+      if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+        const div = document.getElementById("google-btn-register");
+        if (div && window.google) {
+          window.google.accounts.id.renderButton(div, {
+            theme: "filled_black",
+            size: "large",
+            width: 320,
+          });
+          setTimeout(() => div.querySelector("div[role=button]")?.click(), 100);
+        } else {
+          setGoogleLoading(false);
+        }
+      }
     });
   };
 
@@ -284,6 +298,8 @@ function RegisterPage() {
           </svg>
           {googleLoading ? "Connecting..." : "Google"}
         </button>
+        {/* Hidden Google button fallback */}
+        <div id="google-btn-register" style={{ position: "absolute", opacity: 0, pointerEvents: "none", width: 0, height: 0, overflow: "hidden" }} />
 
         <p style={s.footer}>
           Already have a workspace?{" "}
