@@ -1,4 +1,4 @@
-const { VM } = require("vm2");
+const vm = require("vm");
 const axios = require("axios");
 
 // Judge0 CE language IDs
@@ -19,19 +19,25 @@ const JUDGE0_HEADERS = {
   "Accept": "application/json",
 };
 
-// Run JavaScript locally via vm2 (fast, no external call)
+// Run JavaScript locally via Node's built-in vm module
 const runJavaScript = (code) => {
   const output = [];
-  const vm = new VM({
-    timeout: 3000,
-    sandbox: {
-      console: {
-        log: (...args) => output.push(args.map((a) => String(a)).join(" ")),
-        error: (...args) => output.push(args.map((a) => String(a)).join(" ")),
-      },
+  const sandbox = {
+    console: {
+      log: (...args) => output.push(args.map((a) => {
+        try { return typeof a === "object" ? JSON.stringify(a) : String(a); }
+        catch { return String(a); }
+      }).join(" ")),
+      error: (...args) => output.push(args.map((a) => String(a)).join(" ")),
+      warn: (...args) => output.push(args.map((a) => String(a)).join(" ")),
     },
-  });
-  vm.run(code);
+    Math, JSON, parseInt, parseFloat, isNaN, isFinite,
+    Array, Object, String, Number, Boolean, Date, RegExp,
+    Map, Set, Promise,
+    setTimeout: () => {}, clearTimeout: () => {},
+  };
+  vm.createContext(sandbox);
+  vm.runInContext(code, sandbox, { timeout: 5000 });
   return output.length ? output.join("\n") : "Code executed successfully. No console output.";
 };
 
