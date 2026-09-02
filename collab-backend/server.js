@@ -5,6 +5,7 @@ const http = require("http");
 const { Server } = require("socket.io");
 const jwt = require("jsonwebtoken");
 const db = require("./config/db");
+const pool = db; // pool is exported from db.js
 const authRoutes = require("./routes/authRoutes");
 const roomRoutes = require("./routes/roomRoutes");
 const codeRoutes = require("./routes/codeRoutes");
@@ -53,6 +54,14 @@ app.use("/api/rooms", fileRoutes);
 
 app.get("/", (req, res) => {
   res.send("Server is running");
+});
+
+// Temporary DB health check
+app.get("/health", (req, res) => {
+  pool.query("SELECT 1", (err) => {
+    if (err) return res.status(500).json({ db: "error", message: err.message });
+    res.json({ db: "connected", status: "ok" });
+  });
 });
 
 const io = new Server(server, {
