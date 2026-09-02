@@ -220,6 +220,14 @@ io.on("connection", (socket) => {
   });
 });
 
+// Keep Aiven MySQL alive — ping every 5 minutes
+setInterval(() => {
+  pool.query("SELECT 1", (err) => {
+    if (err) console.error("Keep-alive ping failed:", err.message);
+    else console.log("DB keep-alive ping ✅");
+  });
+}, 5 * 60 * 1000);
+
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
   console.log("Server running with Socket.IO on port " + PORT);
