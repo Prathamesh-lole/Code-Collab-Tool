@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import Editor from "@monaco-editor/react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -18,8 +18,8 @@ const getUserColor = (name) => {
 };
 
 const getLangIcon = (lang) => {
-  const map = { python: "🐍", java: "☕", cpp: "⚙", c: "⚙", typescript: "TS", javascript: "JS" };
-  return map[lang] || "📄";
+  const map = { python: "ðŸ", java: "â˜•", cpp: "âš™", c: "âš™", typescript: "TS", javascript: "JS" };
+  return map[lang] || "ðŸ“„";
 };
 
 function RoomPage() {
@@ -74,7 +74,7 @@ function RoomPage() {
     setActivityLog((prev) => [{ msg, type, ts, id: Date.now() }, ...prev].slice(0, 50));
   };
 
-  /* ────────────── API helpers (unchanged) ────────────── */
+  /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ API helpers (unchanged) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   const fetchRoomData = async () => {
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/rooms/key/${roomKey}`);
@@ -117,7 +117,7 @@ function RoomPage() {
     } catch (err) { console.error("Error saving language:", err); }
   };
 
-  /* ────────────── File management (unchanged) ────────────── */
+  /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ File management (unchanged) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   const handleCreateFile = async () => {
     const name = newFileName.trim();
     if (!name) return;
@@ -265,7 +265,7 @@ function RoomPage() {
     setChatInput("");
   };
 
-  /* ────────────── WebRTC helpers (unchanged) ────────────── */
+  /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ WebRTC helpers (unchanged) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   const createPeerConnection = (remoteSocketId, remoteName, localStream) => {
     const pc = new RTCPeerConnection({ iceServers: [{ urls: "stun:stun.l.google.com:19302" }] });
     localStream.getTracks().forEach((track) => pc.addTrack(track, localStream));
@@ -326,7 +326,7 @@ function RoomPage() {
     navigate("/");
   };
 
-  /* ────────────── Socket setup (unchanged logic) ────────────── */
+  /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Socket setup (unchanged logic) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   useEffect(() => {
     const token = localStorage.getItem("token");
     socketRef.current = io(import.meta.env.VITE_API_URL, { auth: { token } });
@@ -419,7 +419,7 @@ function RoomPage() {
     return () => clearTimeout(t);
   }, [inCall]);
 
-  /* ────────────── Loading screen ────────────── */
+  /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Loading screen â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   if (!joined) {
     return (
       <div style={s.loadingPage}>
@@ -439,13 +439,13 @@ function RoomPage() {
 
   const activeFile = files.find((f) => f.id === activeFileId);
 
-  /* ────────────── Main render ────────────── */
+  /* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Main render â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   return (
     <div style={s.page}>
       {/* Ambient */}
       <div style={s.ambient} />
 
-      {/* ── Toast stack ── */}
+      {/* â”€â”€ Toast stack â”€â”€ */}
       <div style={s.toastStack}>
         {toasts.map((toast) => (
           <div key={toast.id} style={{
@@ -454,16 +454,16 @@ function RoomPage() {
             background: toast.type === "join" ? "rgba(16,185,129,0.08)" : "rgba(239,68,68,0.08)",
           }}>
             <span style={{ color: toast.type === "join" ? "#10B981" : "#EF4444", fontWeight: "700", fontSize: "14px" }}>
-              {toast.type === "join" ? "→" : "←"}
+              {toast.type === "join" ? "â†’" : "â†"}
             </span>
             {toast.message}
           </div>
         ))}
       </div>
 
-      {/* ════════════════════════════════════
+      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
           TOP NAVBAR
-          ════════════════════════════════════ */}
+          â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       <header style={s.navbar}>
         {/* Left: logo + breadcrumb */}
         <div style={s.navLeft}>
@@ -486,7 +486,7 @@ function RoomPage() {
           {users.slice(0, 6).map((user, i) => (
             <div
               key={user.socketId || i}
-              title={`${user.name} — Online`}
+              title={`${user.name} â€” Online`}
               style={{
                 ...s.peerAvatar,
                 background: getUserColor(user.name || "?"),
@@ -546,14 +546,14 @@ function RoomPage() {
         </div>
       </header>
 
-      {/* ════════════════════════════════════
+      {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
           MAIN LAYOUT
-          ════════════════════════════════════ */}
+          â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
       <div style={s.layout}>
 
-        {/* ══════════════════════════
+        {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
             LEFT PANEL: File explorer
-            ══════════════════════════ */}
+            â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
         <aside style={s.leftPanel}>
           {/* Panel header */}
           <div style={s.panelHeader}>
@@ -587,7 +587,7 @@ function RoomPage() {
                       style={s.fileDeleteBtn}
                       title="Delete file"
                     >
-                      ×
+                      Ã—
                     </button>
                   )}
                 </div>
@@ -610,7 +610,7 @@ function RoomPage() {
                   placeholder="filename.py"
                   style={s.newFileInput}
                 />
-                <button onClick={handleCreateFile} style={s.newFileConfirm}>✓</button>
+                <button onClick={handleCreateFile} style={s.newFileConfirm}>âœ“</button>
               </div>
             ) : (
               <button onClick={() => setShowNewFileInput(true)} style={s.newFileBtn}>
@@ -627,15 +627,15 @@ function RoomPage() {
               <div key={user.socketId || i} style={s.leftUserRow}>
                 <div style={{ ...s.leftUserDot, background: getUserColor(user.name || "?") }} />
                 <span style={s.leftUserName}>{user.name || "Guest"}</span>
-                <span style={s.leftUserOnline}>●</span>
+                <span style={s.leftUserOnline}>â—</span>
               </div>
             ))}
           </div>
         </aside>
 
-        {/* ══════════════════════════
+        {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
             CENTER: Code canvas
-            ══════════════════════════ */}
+            â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
         <main style={s.centerPanel}>
           {/* File tabs strip */}
           <div style={s.tabsBar}>
@@ -657,7 +657,7 @@ function RoomPage() {
                     <span key={u.socketId} style={{ ...s.tabPeerDot, background: getUserColor(u.name) }} />
                   ))}
                   {files.length > 1 && (
-                    <span onClick={(e) => handleDeleteFile(file.id, e)} style={s.tabClose}>×</span>
+                    <span onClick={(e) => handleDeleteFile(file.id, e)} style={s.tabClose}>Ã—</span>
                   )}
                 </div>
               );
@@ -679,9 +679,9 @@ function RoomPage() {
                 <span style={{ ...s.statusDot, background: getUserColor(getCurrentUser().name) }} />
                 {activeFile?.name || "untitled"}
               </span>
-              <span style={s.editorStatusSep}>·</span>
+              <span style={s.editorStatusSep}>Â·</span>
               <span style={{ ...s.editorStatusItem, color: "#06B6D4" }}>{language}</span>
-              <span style={s.editorStatusSep}>·</span>
+              <span style={s.editorStatusSep}>Â·</span>
               <span style={s.editorStatusItem}>UTF-8</span>
               <span style={{ flex: 1 }} />
               {Object.keys(remoteCursorsRef.current).map((name) => (
@@ -702,16 +702,26 @@ function RoomPage() {
                 fontSize: 14,
                 fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
                 fontLigatures: true,
-                lineHeight: 22,
+                lineHeight: 24,
+                letterSpacing: 0.3,
                 minimap: { enabled: true, renderCharacters: false },
                 scrollBeyondLastLine: false,
                 quickSuggestions: true,
                 suggestOnTriggerCharacters: true,
-                padding: { top: 16, bottom: 16 },
-                renderLineHighlight: "gutter",
+                padding: { top: 20, bottom: 20 },
+                renderLineHighlight: "all",
                 cursorBlinking: "smooth",
                 cursorSmoothCaretAnimation: "on",
                 smoothScrolling: true,
+                lineNumbers: "on",
+                lineNumbersMinChars: 3,
+                glyphMargin: false,
+                folding: true,
+                wordWrap: "off",
+                bracketPairColorization: { enabled: true },
+                guides: { bracketPairs: true, indentation: true },
+                renderWhitespace: "none",
+                colorDecorators: true,
               }}
               onMount={(editor, monaco) => {
                 editorRef.current = editor;
@@ -782,7 +792,7 @@ function RoomPage() {
             />
           </div>
 
-          {/* ── Bottom: stdin + output ── */}
+          {/* â”€â”€ Bottom: stdin + output â”€â”€ */}
           <div style={s.ioPanel}>
             {/* stdin */}
             <div style={s.stdinSection}>
@@ -811,17 +821,17 @@ function RoomPage() {
           </div>
         </main>
 
-        {/* ══════════════════════════
+        {/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
             RIGHT PANEL: Collab Hub
-            ══════════════════════════ */}
+            â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */}
         <aside style={s.rightPanel}>
           {/* Tab strip */}
           <div style={s.rightTabStrip}>
             {[
-              { id: "peers",    label: "Peers",    icon: "👥" },
-              { id: "chat",     label: "Chat",     icon: "💬" },
-              { id: "activity", label: "Activity", icon: "⚡" },
-              { id: "voice",    label: "Voice",    icon: "🎙" },
+              { id: "peers",    label: "Peers",    icon: "ðŸ‘¥" },
+              { id: "chat",     label: "Chat",     icon: "ðŸ’¬" },
+              { id: "activity", label: "Activity", icon: "âš¡" },
+              { id: "voice",    label: "Voice",    icon: "ðŸŽ™" },
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -837,13 +847,13 @@ function RoomPage() {
             ))}
           </div>
 
-          {/* ── Peers tab ── */}
+          {/* â”€â”€ Peers tab â”€â”€ */}
           {rightTab === "peers" && (
             <div style={s.tabContent}>
               <div style={s.sectionLabel}>Active collaborators</div>
               {users.length === 0 ? (
                 <div style={s.emptyState}>
-                  <div style={s.emptyIcon}>👥</div>
+                  <div style={s.emptyIcon}>ðŸ‘¥</div>
                   <div style={s.emptyText}>No one else is here</div>
                   <div style={s.emptySubtext}>Share the room key to invite others</div>
                 </div>
@@ -855,7 +865,7 @@ function RoomPage() {
                     </div>
                     <div style={s.peerCardInfo}>
                       <div style={s.peerCardName}>{user.name || "Guest User"}</div>
-                      <div style={s.peerCardEmail}>{user.email || "—"}</div>
+                      <div style={s.peerCardEmail}>{user.email || "â€”"}</div>
                     </div>
                     <div style={{ ...s.peerOnlineDot, background: getUserColor(user.name || "?") }} />
                   </div>
@@ -873,13 +883,13 @@ function RoomPage() {
             </div>
           )}
 
-          {/* ── Chat tab ── */}
+          {/* â”€â”€ Chat tab â”€â”€ */}
           {rightTab === "chat" && (
             <div style={s.tabContent}>
               <div style={s.chatMessages}>
                 {messages.length === 0 ? (
                   <div style={s.emptyState}>
-                    <div style={s.emptyIcon}>💬</div>
+                    <div style={s.emptyIcon}>ðŸ’¬</div>
                     <div style={s.emptyText}>No messages yet</div>
                     <div style={s.emptySubtext}>Start the conversation</div>
                   </div>
@@ -900,7 +910,7 @@ function RoomPage() {
               </div>
               {typingUsers.length > 0 && (
                 <div style={s.typingBar}>
-                  <span style={s.typingDots}>···</span>
+                  <span style={s.typingDots}>Â·Â·Â·</span>
                   {typingUsers.join(", ")} {typingUsers.length === 1 ? "is" : "are"} typing
                 </div>
               )}
@@ -924,13 +934,13 @@ function RoomPage() {
             </div>
           )}
 
-          {/* ── Activity tab ── */}
+          {/* â”€â”€ Activity tab â”€â”€ */}
           {rightTab === "activity" && (
             <div style={s.tabContent}>
               <div style={s.sectionLabel}>Live event stream</div>
               {activityLog.length === 0 ? (
                 <div style={s.emptyState}>
-                  <div style={s.emptyIcon}>⚡</div>
+                  <div style={s.emptyIcon}>âš¡</div>
                   <div style={s.emptyText}>No activity yet</div>
                   <div style={s.emptySubtext}>Events will appear here in real time</div>
                 </div>
@@ -949,13 +959,13 @@ function RoomPage() {
             </div>
           )}
 
-          {/* ── Voice tab ── */}
+          {/* â”€â”€ Voice tab â”€â”€ */}
           {rightTab === "voice" && (
             <div style={s.tabContent}>
               <div style={s.sectionLabel}>Voice &amp; Video</div>
               {!inCall ? (
                 <div style={s.voiceOff}>
-                  <div style={s.voiceOffIcon}>🎙</div>
+                  <div style={s.voiceOffIcon}>ðŸŽ™</div>
                   <div style={s.voiceOffText}>Not in a call</div>
                   <button onClick={handleJoinCall} style={s.joinCallBtn}>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.6 1.21h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9A16 16 0 0 0 15 16.09l1.94-1.94a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
@@ -970,7 +980,7 @@ function RoomPage() {
                       style={{ ...s.callCtrlBtn, background: micMuted ? "rgba(239,68,68,0.15)" : "rgba(16,185,129,0.15)", borderColor: micMuted ? "#EF4444" : "#10B981", color: micMuted ? "#EF4444" : "#10B981" }}
                       title={micMuted ? "Unmute" : "Mute"}
                     >
-                      {micMuted ? "🔇" : "🎙"}<br />
+                      {micMuted ? "ðŸ”‡" : "ðŸŽ™"}<br />
                       <span style={{ fontSize: "10px" }}>{micMuted ? "Muted" : "Mic"}</span>
                     </button>
                     <button
@@ -978,7 +988,7 @@ function RoomPage() {
                       style={{ ...s.callCtrlBtn, background: camOff ? "rgba(239,68,68,0.15)" : "rgba(16,185,129,0.15)", borderColor: camOff ? "#EF4444" : "#10B981", color: camOff ? "#EF4444" : "#10B981" }}
                       title={camOff ? "Turn on cam" : "Turn off cam"}
                     >
-                      {camOff ? "📷" : "📹"}<br />
+                      {camOff ? "ðŸ“·" : "ðŸ“¹"}<br />
                       <span style={{ fontSize: "10px" }}>{camOff ? "Off" : "Cam"}</span>
                     </button>
                     <button
@@ -986,7 +996,7 @@ function RoomPage() {
                       style={{ ...s.callCtrlBtn, background: "rgba(239,68,68,0.15)", borderColor: "#EF4444", color: "#EF4444" }}
                       title="Leave call"
                     >
-                      ✕<br />
+                      âœ•<br />
                       <span style={{ fontSize: "10px" }}>Leave</span>
                     </button>
                   </div>
@@ -1016,15 +1026,15 @@ function RoomPage() {
   );
 }
 
-/* ════════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    STYLES
-   ════════════════════════════════════════════════════════════ */
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 const s = {
-  /* ── Base ── */
+  /* â”€â”€ Base â”€â”€ */
   page: {
     minHeight: "100vh",
-    background: "#070707",
-    color: "#F5F5F5",
+    background: "#0A0A0F",
+    color: "#E8E8E8",
     fontFamily: "'Plus Jakarta Sans', 'Inter', system-ui, sans-serif",
     display: "flex",
     flexDirection: "column",
@@ -1032,17 +1042,17 @@ const s = {
   },
   ambient: {
     position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0,
-    background: "radial-gradient(ellipse 1200px 800px at 30% 20%, rgba(59,130,246,0.03) 0%, transparent 60%)",
+    background: "radial-gradient(ellipse 1200px 800px at 30% 20%, rgba(59,130,246,0.04) 0%, transparent 60%)",
   },
   grid: {
     position: "fixed", inset: 0, pointerEvents: "none",
-    backgroundImage: "linear-gradient(#1A1A1A 1px, transparent 1px), linear-gradient(90deg, #1A1A1A 1px, transparent 1px)",
-    backgroundSize: "48px 48px", opacity: 0.35,
+    backgroundImage: "linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)",
+    backgroundSize: "48px 48px", opacity: 0.6,
   },
 
-  /* ── Loading ── */
+  /* â”€â”€ Loading â”€â”€ */
   loadingPage: {
-    minHeight: "100vh", background: "#070707", color: "#F5F5F5",
+    minHeight: "100vh", background: "#0A0A0F", color: "#E8E8E8",
     display: "flex", justifyContent: "center", alignItems: "center",
     flexDirection: "column", position: "relative", overflow: "hidden",
     fontFamily: "'Plus Jakarta Sans', sans-serif",
@@ -1050,33 +1060,33 @@ const s = {
   loadingCard: {
     position: "relative", zIndex: 10,
     display: "flex", flexDirection: "column", alignItems: "center", gap: "16px",
-    background: "rgba(18,18,18,0.9)", border: "1px solid #242424",
+    background: "rgba(20,20,28,0.95)", border: "1px solid #2A2A3A",
     borderRadius: "16px", padding: "40px 48px",
     boxShadow: "0 24px 64px rgba(0,0,0,0.8)",
   },
   logoBadgeLg: {
     display: "flex", alignItems: "center", justifyContent: "center",
     width: "48px", height: "48px",
-    background: "#0D0D0D", border: "1px solid #10B981",
+    background: "#111120", border: "1px solid #10B981",
     borderRadius: "12px", fontFamily: "'JetBrains Mono', monospace",
     fontSize: "12px", fontWeight: "700", letterSpacing: "-1px",
     color: "#F5F5F5", boxShadow: "0 0 20px rgba(16,185,129,0.25)",
   },
   loadingSpinner: {
     width: "28px", height: "28px",
-    border: "2px solid #1A1A1A",
+    border: "2px solid #2A2A3A",
     borderTopColor: "#10B981",
     borderRadius: "50%", animation: "spin 0.8s linear infinite",
   },
-  loadingText: { fontSize: "14px", color: "#8B8B8B", margin: 0 },
+  loadingText: { fontSize: "14px", color: "#9A9AAA", margin: 0 },
   loadingKey: {
-    fontSize: "12px", color: "#4A4A4A",
+    fontSize: "12px", color: "#7A7A8A",
     fontFamily: "'JetBrains Mono', monospace",
-    background: "#0D0D0D", padding: "4px 12px",
-    borderRadius: "6px", border: "1px solid #1A1A1A",
+    background: "#111120", padding: "4px 12px",
+    borderRadius: "6px", border: "1px solid #2A2A3A",
   },
 
-  /* ── Toast ── */
+  /* â”€â”€ Toast â”€â”€ */
   toastStack: {
     position: "fixed", top: "68px", right: "16px", zIndex: 9999,
     display: "flex", flexDirection: "column", gap: "8px", pointerEvents: "none",
@@ -1085,44 +1095,44 @@ const s = {
     display: "flex", alignItems: "center", gap: "10px",
     padding: "10px 16px", borderRadius: "8px",
     border: "1px solid", borderLeft: "3px solid",
-    fontSize: "13px", color: "#F5F5F5", fontWeight: "500",
+    fontSize: "13px", color: "#E8E8E8", fontWeight: "500",
     boxShadow: "0 8px 24px rgba(0,0,0,0.5)",
     animation: "fade-in 0.2s ease",
     backdropFilter: "blur(20px)",
   },
 
-  /* ── Navbar ── */
+  /* â”€â”€ Navbar â”€â”€ */
   navbar: {
     position: "relative", zIndex: 100,
     display: "flex", justifyContent: "space-between", alignItems: "center",
     height: "48px", padding: "0 16px",
-    background: "rgba(12,12,12,0.95)",
+    background: "rgba(10,10,18,0.98)",
     backdropFilter: "blur(20px)",
-    borderBottom: "1px solid #1A1A1A",
+    borderBottom: "1px solid #252535",
     flexShrink: 0, gap: "12px",
   },
   navLeft: { display: "flex", alignItems: "center", gap: "10px", flexShrink: 0 },
   logoBadge: {
     display: "flex", alignItems: "center", justifyContent: "center",
     width: "28px", height: "28px",
-    background: "#0D0D0D", border: "1px solid #10B981",
+    background: "#111120", border: "1px solid #10B981",
     borderRadius: "7px", fontFamily: "'JetBrains Mono', monospace",
     fontSize: "8px", fontWeight: "700", letterSpacing: "-1px",
     color: "#F5F5F5", flexShrink: 0,
     boxShadow: "0 0 10px rgba(16,185,129,0.2)",
   },
-  logoText: { fontSize: "13px", fontWeight: "800", color: "#F5F5F5", letterSpacing: "0.5px" },
-  navSep: { color: "#2A2A2A", fontSize: "16px" },
+  logoText: { fontSize: "13px", fontWeight: "800", color: "#F0F0F0", letterSpacing: "0.5px" },
+  navSep: { color: "#353545", fontSize: "16px" },
   breadcrumb: {
-    fontSize: "12px", color: "#8B8B8B",
+    fontSize: "12px", color: "#A0A0B0",
     fontFamily: "'JetBrains Mono', monospace",
-    background: "#0D0D0D", border: "1px solid #1A1A1A",
+    background: "#15151F", border: "1px solid #252535",
     padding: "2px 10px", borderRadius: "20px",
   },
   livePill: {
     display: "flex", alignItems: "center", gap: "5px",
     fontSize: "11px", fontWeight: "600", color: "#10B981",
-    background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.2)",
+    background: "rgba(16,185,129,0.12)", border: "1px solid rgba(16,185,129,0.3)",
     padding: "2px 8px", borderRadius: "20px",
   },
   liveDot: {
@@ -1138,13 +1148,13 @@ const s = {
     fontSize: "10px", fontWeight: "700", color: "#fff",
     cursor: "default", flexShrink: 0, position: "relative",
   },
-  peerCount: { fontSize: "11px", color: "#4A4A4A", marginLeft: "10px", whiteSpace: "nowrap" },
+  peerCount: { fontSize: "11px", color: "#7A7A8A", marginLeft: "10px", whiteSpace: "nowrap" },
 
   navRight: { display: "flex", alignItems: "center", gap: "6px", flexShrink: 0 },
   langSelect: {
     padding: "5px 8px", borderRadius: "6px",
-    border: "1px solid #1A1A1A", background: "#0D0D0D",
-    color: "#8B8B8B", fontSize: "12px", cursor: "pointer",
+    border: "1px solid #252535", background: "#15151F",
+    color: "#C0C0D0", fontSize: "12px", cursor: "pointer",
     fontFamily: "'JetBrains Mono', monospace",
     outline: "none",
   },
@@ -1153,22 +1163,22 @@ const s = {
     padding: "6px 14px", borderRadius: "6px", border: "none",
     background: "linear-gradient(135deg, #10B981 0%, #059669 100%)",
     color: "#fff", fontSize: "12px", fontWeight: "700",
-    cursor: "pointer", boxShadow: "0 0 14px rgba(16,185,129,0.25)",
+    cursor: "pointer", boxShadow: "0 0 14px rgba(16,185,129,0.3)",
     fontFamily: "'Plus Jakarta Sans', sans-serif",
   },
   ghostBtn: {
     display: "flex", alignItems: "center", justifyContent: "center",
     width: "30px", height: "30px", borderRadius: "6px",
-    border: "1px solid #1A1A1A", background: "transparent",
-    color: "#4A4A4A", cursor: "pointer",
+    border: "1px solid #252535", background: "transparent",
+    color: "#8080A0", cursor: "pointer",
     transition: "color 0.15s, border-color 0.15s",
   },
   leaveBtn: {
     display: "flex", alignItems: "center", gap: "5px",
     padding: "6px 12px", borderRadius: "6px",
-    border: "1px solid rgba(239,68,68,0.3)",
-    background: "rgba(239,68,68,0.06)",
-    color: "#EF4444", fontSize: "12px", fontWeight: "600",
+    border: "1px solid rgba(239,68,68,0.4)",
+    background: "rgba(239,68,68,0.08)",
+    color: "#F87171", fontSize: "12px", fontWeight: "600",
     cursor: "pointer", fontFamily: "'Plus Jakarta Sans', sans-serif",
   },
   btnSpinner: {
@@ -1177,7 +1187,7 @@ const s = {
     borderRadius: "50%", animation: "spin 0.7s linear infinite", flexShrink: 0,
   },
 
-  /* ── Layout ── */
+  /* â”€â”€ Layout â”€â”€ */
   layout: {
     display: "flex", flex: 1,
     overflow: "hidden",
@@ -1185,39 +1195,39 @@ const s = {
     minHeight: 0,
   },
 
-  /* ── Left panel ── */
+  /* â”€â”€ Left panel â”€â”€ */
   leftPanel: {
     width: "210px", flexShrink: 0,
-    background: "#0A0A0A",
-    borderRight: "1px solid #1A1A1A",
+    background: "#0E0E18",
+    borderRight: "1px solid #252535",
     display: "flex", flexDirection: "column",
     overflow: "hidden",
   },
   panelHeader: {
     padding: "10px 14px",
-    borderBottom: "1px solid #1A1A1A",
+    borderBottom: "1px solid #252535",
     flexShrink: 0,
   },
   panelHeaderTitle: {
-    fontSize: "10px", fontWeight: "700", color: "#4A4A4A",
+    fontSize: "10px", fontWeight: "700", color: "#7070A0",
     textTransform: "uppercase", letterSpacing: "0.8px",
     display: "flex", alignItems: "center",
   },
   fileList: { flex: 1, overflowY: "auto", padding: "6px 0" },
   fileItem: {
     display: "flex", alignItems: "center", gap: "7px",
-    padding: "6px 14px",
-    cursor: "pointer", fontSize: "12px", color: "#4A4A4A",
+    padding: "7px 14px",
+    cursor: "pointer", fontSize: "13px", color: "#8888A8",
     transition: "background 0.1s, color 0.1s",
     position: "relative",
   },
   fileItemActive: {
-    background: "rgba(59,130,246,0.08)",
-    color: "#F5F5F5",
+    background: "rgba(59,130,246,0.1)",
+    color: "#E8E8F8",
     borderLeft: "2px solid #3B82F6",
     paddingLeft: "12px",
   },
-  fileItemIcon: { fontSize: "12px", flexShrink: 0 },
+  fileItemIcon: { fontSize: "13px", flexShrink: 0 },
   fileItemName: { flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" },
   fileItemBadge: {
     fontSize: "9px", fontWeight: "700",
@@ -1225,7 +1235,7 @@ const s = {
   },
   fileDeleteBtn: {
     background: "none", border: "none", cursor: "pointer",
-    color: "#4A4A4A", fontSize: "14px", lineHeight: 1,
+    color: "#5A5A7A", fontSize: "14px", lineHeight: 1,
     padding: "0 2px", borderRadius: "3px",
     flexShrink: 0,
     fontFamily: "sans-serif",
@@ -1233,14 +1243,14 @@ const s = {
 
   newFileArea: {
     padding: "8px 10px",
-    borderTop: "1px solid #1A1A1A",
+    borderTop: "1px solid #252535",
     flexShrink: 0,
   },
   newFileInputRow: { display: "flex", gap: "4px" },
   newFileInput: {
     flex: 1, padding: "5px 8px", borderRadius: "6px",
-    border: "1px solid #10B981", background: "#0D0D0D",
-    color: "#F5F5F5", fontSize: "12px", outline: "none",
+    border: "1px solid #10B981", background: "#111120",
+    color: "#E8E8E8", fontSize: "12px", outline: "none",
     fontFamily: "'JetBrains Mono', monospace",
   },
   newFileConfirm: {
@@ -1250,49 +1260,49 @@ const s = {
   newFileBtn: {
     display: "flex", alignItems: "center", gap: "6px",
     width: "100%", padding: "6px 10px", borderRadius: "6px",
-    border: "1px dashed #242424", background: "transparent",
-    color: "#4A4A4A", fontSize: "11px", cursor: "pointer",
+    border: "1px dashed #303045", background: "transparent",
+    color: "#7070A0", fontSize: "11px", cursor: "pointer",
     fontFamily: "'Plus Jakarta Sans', sans-serif",
   },
 
   leftPanelUsers: {
-    borderTop: "1px solid #1A1A1A",
+    borderTop: "1px solid #252535",
     padding: "8px 0 8px",
     flexShrink: 0,
   },
   panelSectionLabel: {
-    fontSize: "9px", fontWeight: "700", color: "#2A2A2A",
+    fontSize: "9px", fontWeight: "700", color: "#5050A0",
     textTransform: "uppercase", letterSpacing: "0.8px",
     padding: "0 14px 6px",
   },
   leftUserRow: {
     display: "flex", alignItems: "center", gap: "7px",
-    padding: "4px 14px", fontSize: "12px",
+    padding: "5px 14px", fontSize: "12px",
   },
   leftUserDot: { width: "6px", height: "6px", borderRadius: "50%", flexShrink: 0 },
-  leftUserName: { flex: 1, color: "#4A4A4A", fontSize: "12px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" },
+  leftUserName: { flex: 1, color: "#9090B8", fontSize: "12px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" },
   leftUserOnline: { fontSize: "8px", color: "#10B981" },
 
-  /* ── Center panel ── */
+  /* â”€â”€ Center panel â”€â”€ */
   centerPanel: {
     flex: 1, display: "flex", flexDirection: "column",
     overflow: "hidden", minWidth: 0,
-    background: "#0D0D0D",
+    background: "#111118",
   },
 
   /* File tabs */
   tabsBar: {
     display: "flex", alignItems: "flex-end", gap: "2px",
     padding: "0 8px",
-    background: "#0A0A0A",
-    borderBottom: "1px solid #1A1A1A",
+    background: "#0D0D15",
+    borderBottom: "1px solid #252535",
     overflowX: "auto", flexShrink: 0,
-    minHeight: "38px",
+    minHeight: "40px",
   },
   tab: {
     display: "flex", alignItems: "center", gap: "5px",
-    padding: "7px 14px 6px",
-    fontSize: "12px", color: "#4A4A4A",
+    padding: "8px 14px 7px",
+    fontSize: "12px", color: "#7070A0",
     cursor: "pointer", userSelect: "none",
     background: "transparent", border: "none",
     borderTop: "2px solid transparent",
@@ -1301,25 +1311,25 @@ const s = {
     fontFamily: "'Plus Jakarta Sans', sans-serif",
   },
   tabActive: {
-    color: "#F5F5F5",
-    background: "#0D0D0D",
+    color: "#E8E8F8",
+    background: "#111118",
     borderTop: "2px solid #3B82F6",
     borderRadius: "6px 6px 0 0",
   },
-  tabIcon: { fontSize: "11px", flexShrink: 0 },
-  tabName: { fontSize: "12px" },
+  tabIcon: { fontSize: "12px", flexShrink: 0 },
+  tabName: { fontSize: "12px", fontWeight: "500" },
   tabPeerDot: {
     width: "5px", height: "5px", borderRadius: "50%", display: "inline-block", flexShrink: 0,
   },
   tabClose: {
-    fontSize: "14px", color: "#4A4A4A", lineHeight: 1,
+    fontSize: "14px", color: "#5A5A7A", lineHeight: 1,
     padding: "0 2px", borderRadius: "3px", cursor: "pointer",
     marginLeft: "2px",
   },
   tabNewFile: {
     padding: "4px 10px", borderRadius: "4px",
-    border: "1px dashed #1A1A1A", background: "transparent",
-    color: "#2A2A2A", fontSize: "11px", cursor: "pointer",
+    border: "1px dashed #303045", background: "transparent",
+    color: "#5A5A7A", fontSize: "11px", cursor: "pointer",
     marginBottom: "6px", alignSelf: "center",
     fontFamily: "'Plus Jakarta Sans', sans-serif",
   },
@@ -1328,13 +1338,13 @@ const s = {
   editorSurface: { flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" },
   editorStatusBar: {
     display: "flex", alignItems: "center", gap: "0",
-    padding: "3px 14px",
-    background: "#0A0A0A",
-    borderBottom: "1px solid #1A1A1A",
-    flexShrink: 0, flexWrap: "wrap", minHeight: "26px",
+    padding: "4px 14px",
+    background: "#0D0D15",
+    borderBottom: "1px solid #252535",
+    flexShrink: 0, flexWrap: "wrap", minHeight: "28px",
   },
-  editorStatusItem: { fontSize: "11px", color: "#4A4A4A", display: "flex", alignItems: "center", gap: "4px" },
-  editorStatusSep: { fontSize: "11px", color: "#1A1A1A", margin: "0 8px" },
+  editorStatusItem: { fontSize: "11px", color: "#7070A0", display: "flex", alignItems: "center", gap: "4px" },
+  editorStatusSep: { fontSize: "11px", color: "#303045", margin: "0 8px" },
   statusDot: { width: "6px", height: "6px", borderRadius: "50%", display: "inline-block" },
   cursorBadge: {
     fontSize: "10px", color: "#fff", padding: "1px 6px",
@@ -1345,62 +1355,63 @@ const s = {
   /* IO panel */
   ioPanel: {
     display: "flex", flexShrink: 0,
-    borderTop: "1px solid #1A1A1A",
-    background: "#0A0A0A",
-    maxHeight: "160px",
+    borderTop: "1px solid #252535",
+    background: "#0D0D15",
+    maxHeight: "170px",
   },
   stdinSection: {
     flex: 1, display: "flex", flexDirection: "column",
-    borderRight: "1px solid #1A1A1A",
+    borderRight: "1px solid #252535",
   },
   outputSection: {
     flex: 2, display: "flex", flexDirection: "column", overflow: "hidden",
   },
   ioPanelHeader: {
     display: "flex", alignItems: "center", gap: "6px",
-    padding: "5px 12px", borderBottom: "1px solid #1A1A1A",
-    fontSize: "10px", fontWeight: "700", color: "#4A4A4A",
+    padding: "6px 12px", borderBottom: "1px solid #252535",
+    fontSize: "10px", fontWeight: "700", color: "#7070A0",
     textTransform: "uppercase", letterSpacing: "0.8px",
     flexShrink: 0,
   },
   ioActionBtn: {
     background: "none", border: "none", cursor: "pointer",
-    fontSize: "10px", color: "#4A4A4A",
+    fontSize: "10px", color: "#7070A0",
     fontFamily: "'Plus Jakarta Sans', sans-serif",
     letterSpacing: "0.3px",
   },
   stdinArea: {
-    flex: 1, padding: "8px 12px",
+    flex: 1, padding: "10px 14px",
     background: "transparent", border: "none", outline: "none",
-    color: "#8B8B8B", fontFamily: "'JetBrains Mono', monospace",
-    fontSize: "12px", resize: "none",
+    color: "#C0C0D8", fontFamily: "'JetBrains Mono', monospace",
+    fontSize: "13px", resize: "none",
     lineHeight: "1.6",
   },
   outputPre: {
-    flex: 1, margin: 0, padding: "8px 12px",
-    fontFamily: "'JetBrains Mono', monospace", fontSize: "12px",
-    color: "#10B981", lineHeight: "1.6",
+    flex: 1, margin: 0, padding: "10px 14px",
+    fontFamily: "'JetBrains Mono', monospace", fontSize: "13px",
+    color: "#4ADE80", lineHeight: "1.7",
     whiteSpace: "pre-wrap", wordBreak: "break-word",
     overflowY: "auto",
   },
 
-  /* ── Right panel ── */
+  /* â”€â”€ Right panel â”€â”€ */
   rightPanel: {
     width: "280px", flexShrink: 0,
-    background: "#0A0A0A",
-    borderLeft: "1px solid #1A1A1A",
+    background: "#0E0E18",
+    borderLeft: "1px solid #252535",
     display: "flex", flexDirection: "column",
     overflow: "hidden",
   },
   rightTabStrip: {
     display: "flex",
-    borderBottom: "1px solid #1A1A1A",
+    borderBottom: "1px solid #252535",
     flexShrink: 0,
+    background: "#0B0B13",
   },
   rightTab: {
     flex: 1, display: "flex", flexDirection: "column", alignItems: "center",
-    gap: "2px", padding: "8px 4px 7px",
-    fontSize: "9px", fontWeight: "700", color: "#2A2A2A",
+    gap: "3px", padding: "9px 4px 8px",
+    fontSize: "9px", fontWeight: "700", color: "#5A5A7A",
     textTransform: "uppercase", letterSpacing: "0.5px",
     background: "transparent", border: "none", cursor: "pointer",
     borderBottom: "2px solid transparent",
@@ -1408,7 +1419,7 @@ const s = {
     fontFamily: "'Plus Jakarta Sans', sans-serif",
   },
   rightTabActive: {
-    color: "#F5F5F5",
+    color: "#D0D0F0",
     borderBottomColor: "#3B82F6",
   },
   tabContent: {
@@ -1417,7 +1428,7 @@ const s = {
   },
 
   sectionLabel: {
-    fontSize: "9px", fontWeight: "700", color: "#2A2A2A",
+    fontSize: "9px", fontWeight: "700", color: "#6060A0",
     textTransform: "uppercase", letterSpacing: "0.8px",
     marginBottom: "4px",
   },
@@ -1426,65 +1437,65 @@ const s = {
   peerCard: {
     display: "flex", alignItems: "center", gap: "10px",
     padding: "10px 12px",
-    background: "#0D0D0D", border: "1px solid #1A1A1A",
+    background: "#141420", border: "1px solid #252535",
     borderRadius: "8px",
     transition: "border-color 0.15s",
   },
   peerCardAvatar: {
-    width: "32px", height: "32px", borderRadius: "50%",
+    width: "34px", height: "34px", borderRadius: "50%",
     display: "flex", alignItems: "center", justifyContent: "center",
-    fontSize: "12px", fontWeight: "700", color: "#fff", flexShrink: 0,
+    fontSize: "13px", fontWeight: "700", color: "#fff", flexShrink: 0,
   },
   peerCardInfo: { flex: 1, overflow: "hidden" },
-  peerCardName: { fontSize: "13px", fontWeight: "600", color: "#F5F5F5", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" },
-  peerCardEmail: { fontSize: "11px", color: "#4A4A4A", marginTop: "2px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" },
+  peerCardName: { fontSize: "13px", fontWeight: "600", color: "#E0E0F0", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" },
+  peerCardEmail: { fontSize: "11px", color: "#7070A0", marginTop: "2px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" },
   peerOnlineDot: { width: "7px", height: "7px", borderRadius: "50%", flexShrink: 0, animation: "pulse-glow 2s ease-in-out infinite" },
 
   /* Room key display */
   roomKeyDisplay: {
     display: "flex", alignItems: "center", gap: "8px",
-    background: "#0D0D0D", border: "1px solid #1A1A1A",
+    background: "#141420", border: "1px solid #252535",
     borderRadius: "8px", padding: "8px 12px",
   },
   roomKeyCode: {
     flex: 1, fontFamily: "'JetBrains Mono', monospace",
-    fontSize: "12px", color: "#8B8B8B",
+    fontSize: "12px", color: "#A0A0C0",
   },
   copyKeyBtn: {
     padding: "4px 10px", borderRadius: "5px",
-    border: "1px solid #242424", background: "transparent",
-    color: "#4A4A4A", fontSize: "11px", cursor: "pointer",
+    border: "1px solid #303045", background: "transparent",
+    color: "#8080A0", fontSize: "11px", cursor: "pointer",
     fontFamily: "'Plus Jakarta Sans', sans-serif",
   },
 
   /* Chat */
   chatMessages: {
     flex: 1, overflowY: "auto",
-    background: "#0D0D0D", border: "1px solid #1A1A1A",
-    borderRadius: "8px", padding: "10px",
+    background: "#141420", border: "1px solid #252535",
+    borderRadius: "8px", padding: "12px",
     minHeight: "200px", maxHeight: "340px",
-    display: "flex", flexDirection: "column", gap: "10px",
+    display: "flex", flexDirection: "column", gap: "12px",
   },
   msgBubble: { display: "flex", flexDirection: "column", gap: "4px" },
   msgHeader: { display: "flex", alignItems: "center", gap: "6px" },
   msgAvatar: {
-    width: "18px", height: "18px", borderRadius: "50%",
+    width: "20px", height: "20px", borderRadius: "50%",
     display: "flex", alignItems: "center", justifyContent: "center",
-    fontSize: "8px", fontWeight: "700", color: "#fff", flexShrink: 0,
+    fontSize: "9px", fontWeight: "700", color: "#fff", flexShrink: 0,
   },
-  msgSender: { fontSize: "12px", fontWeight: "700", color: "#F5F5F5", flex: 1 },
-  msgTime: { fontSize: "10px", color: "#2A2A2A" },
-  msgText: { fontSize: "13px", color: "#8B8B8B", paddingLeft: "24px", lineHeight: "1.5", wordBreak: "break-word" },
+  msgSender: { fontSize: "12px", fontWeight: "700", color: "#D0D0F0", flex: 1 },
+  msgTime: { fontSize: "10px", color: "#4A4A6A" },
+  msgText: { fontSize: "13px", color: "#A0A0C0", paddingLeft: "26px", lineHeight: "1.55", wordBreak: "break-word" },
   typingBar: {
-    fontSize: "11px", color: "#4A4A4A", fontStyle: "italic",
+    fontSize: "11px", color: "#7070A0", fontStyle: "italic",
     display: "flex", alignItems: "center", gap: "6px",
   },
   typingDots: { color: "#3B82F6", letterSpacing: "2px", fontStyle: "normal" },
   chatInputRow: { display: "flex", gap: "6px" },
   chatInput: {
     flex: 1, padding: "9px 12px", borderRadius: "8px",
-    border: "1px solid #1A1A1A", background: "#0D0D0D",
-    color: "#F5F5F5", fontSize: "13px", outline: "none",
+    border: "1px solid #252535", background: "#141420",
+    color: "#E0E0F0", fontSize: "13px", outline: "none",
     fontFamily: "'Plus Jakarta Sans', sans-serif",
     transition: "border-color 0.15s",
   },
@@ -1499,13 +1510,13 @@ const s = {
   /* Activity */
   activityEntry: {
     display: "flex", alignItems: "center", gap: "8px",
-    padding: "7px 10px",
-    background: "#0D0D0D", border: "1px solid #1A1A1A",
+    padding: "8px 10px",
+    background: "#141420", border: "1px solid #252535",
     borderRadius: "6px",
   },
   activityDot: { width: "6px", height: "6px", borderRadius: "50%", flexShrink: 0 },
-  activityMsg: { flex: 1, fontSize: "12px", color: "#8B8B8B", lineHeight: "1.4" },
-  activityTs: { fontSize: "10px", color: "#2A2A2A", flexShrink: 0, fontFamily: "'JetBrains Mono', monospace" },
+  activityMsg: { flex: 1, fontSize: "12px", color: "#9090B8", lineHeight: "1.4" },
+  activityTs: { fontSize: "10px", color: "#4A4A6A", flexShrink: 0, fontFamily: "'JetBrains Mono', monospace" },
 
   /* Voice / Video */
   voiceOff: {
@@ -1513,7 +1524,7 @@ const s = {
     gap: "10px", padding: "24px 0",
   },
   voiceOffIcon: { fontSize: "32px" },
-  voiceOffText: { fontSize: "14px", fontWeight: "600", color: "#4A4A4A" },
+  voiceOffText: { fontSize: "14px", fontWeight: "600", color: "#7070A0" },
   joinCallBtn: {
     display: "flex", alignItems: "center", gap: "8px",
     padding: "10px 20px", borderRadius: "8px", border: "none",
@@ -1533,7 +1544,7 @@ const s = {
   videoGrid: { display: "flex", flexDirection: "column", gap: "8px" },
   videoTile: {
     position: "relative", borderRadius: "8px", overflow: "hidden",
-    background: "#0D0D0D", border: "1px solid #1A1A1A",
+    background: "#141420", border: "1px solid #252535",
   },
   video: {
     width: "100%", display: "block", maxHeight: "120px",
@@ -1542,7 +1553,7 @@ const s = {
   videoLabel: {
     position: "absolute", bottom: "6px", left: "8px",
     fontSize: "10px", color: "#fff",
-    background: "rgba(0,0,0,0.7)", padding: "2px 6px",
+    background: "rgba(0,0,0,0.75)", padding: "2px 6px",
     borderRadius: "4px", fontFamily: "'JetBrains Mono', monospace",
   },
 
@@ -1551,9 +1562,9 @@ const s = {
     display: "flex", flexDirection: "column", alignItems: "center",
     gap: "6px", padding: "28px 0",
   },
-  emptyIcon: { fontSize: "28px", opacity: 0.3 },
-  emptyText: { fontSize: "13px", fontWeight: "600", color: "#4A4A4A" },
-  emptySubtext: { fontSize: "11px", color: "#2A2A2A", textAlign: "center" },
+  emptyIcon: { fontSize: "28px", opacity: 0.35 },
+  emptyText: { fontSize: "13px", fontWeight: "600", color: "#6060A0" },
+  emptySubtext: { fontSize: "11px", color: "#404060", textAlign: "center" },
 };
 
 export default RoomPage;

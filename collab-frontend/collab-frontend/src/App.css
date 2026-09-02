@@ -18,11 +18,21 @@ input:focus, textarea:focus {
 
 /* Monaco editor container */
 .monaco-editor {
-  background: #0D0D0D !important;
+  background: #111118 !important;
 }
 
 .monaco-editor .margin {
-  background: #0D0D0D !important;
+  background: #0E0E16 !important;
+  border-right: 1px solid #252535 !important;
+}
+
+/* Line number color */
+.monaco-editor .line-numbers {
+  color: #454565 !important;
+}
+
+.monaco-editor .current-line ~ .line-numbers {
+  color: #8080A0 !important;
 }
 
 /* Scrollbar inside Monaco */
@@ -31,14 +41,19 @@ input:focus, textarea:focus {
 }
 
 .monaco-editor .slider {
-  background: #1A1A1A !important;
+  background: #2A2A3A !important;
   border-radius: 3px !important;
 }
 
-/* Active line highlight override for CODE//FLOW theme */
+/* Active line highlight */
 .monaco-editor .current-line {
-  background: rgba(59, 130, 246, 0.04) !important;
-  border-color: #242424 !important;
+  background: rgba(59, 130, 246, 0.06) !important;
+  border-color: rgba(59, 130, 246, 0.15) !important;
+}
+
+/* Selection highlight */
+.monaco-editor .selected-text {
+  background: rgba(59, 130, 246, 0.2) !important;
 }
 
 /* Remote cursor labels */
