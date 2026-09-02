@@ -3,7 +3,6 @@ const db = require("../config/db");
 // Generate random room key like abc-4k9m-x2p
 const generateRoomKey = () => {
   const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
-
   const part = (length) => {
     let result = "";
     for (let i = 0; i < length; i++) {
@@ -11,7 +10,6 @@ const generateRoomKey = () => {
     }
     return result;
   };
-
   return `${part(3)}-${part(4)}-${part(3)}`;
 };
 
@@ -29,7 +27,6 @@ exports.createRoom = (req, res) => {
     [room_name, userId, defaultCode, defaultLanguage, roomKey],
     (err, result) => {
       if (err) return res.status(500).json(err);
-
       res.json({
         message: "Room created successfully",
         roomId: result.insertId,
@@ -48,11 +45,8 @@ exports.getRoomByKey = (req, res) => {
     [roomKey],
     (err, result) => {
       if (err) return res.status(500).json(err);
-
-      if (result.length === 0) {
+      if (result.length === 0)
         return res.status(404).json({ message: "Room not found" });
-      }
-
       res.json(result[0]);
     }
   );
@@ -68,8 +62,22 @@ exports.updateRoomCodeByKey = (req, res) => {
     [code, roomKey],
     (err) => {
       if (err) return res.status(500).json(err);
-
       res.json({ message: "Code updated successfully" });
+    }
+  );
+};
+
+// Update room language by room_key
+exports.updateRoomLanguageByKey = (req, res) => {
+  const { roomKey } = req.params;
+  const { language } = req.body;
+
+  db.query(
+    "UPDATE rooms SET language = ? WHERE room_key = ?",
+    [language, roomKey],
+    (err) => {
+      if (err) return res.status(500).json(err);
+      res.json({ message: "Language updated successfully" });
     }
   );
 };
@@ -97,7 +105,6 @@ exports.deleteRoom = (req, res) => {
   const { roomKey } = req.params;
   const userId = req.user.id;
 
-  // Verify ownership first
   db.query(
     "SELECT id FROM rooms WHERE room_key = ? AND created_by = ?",
     [roomKey, userId],
@@ -106,7 +113,7 @@ exports.deleteRoom = (req, res) => {
       if (result.length === 0)
         return res.status(403).json({ message: "Room not found or you are not the owner" });
 
-      // Delete files first (FK safety)
+      // Delete files first, then the room
       db.query("DELETE FROM files WHERE room_key = ?", [roomKey], (err2) => {
         if (err2) return res.status(500).json({ message: "Failed to delete room files" });
 
@@ -115,19 +122,6 @@ exports.deleteRoom = (req, res) => {
           res.json({ message: "Room deleted successfully" });
         });
       });
-    }
-  );
-};
-  const { roomKey } = req.params;
-  const { language } = req.body;
-
-  db.query(
-    "UPDATE rooms SET language = ? WHERE room_key = ?",
-    [language, roomKey],
-    (err) => {
-      if (err) return res.status(500).json(err);
-
-      res.json({ message: "Language updated successfully" });
     }
   );
 };
