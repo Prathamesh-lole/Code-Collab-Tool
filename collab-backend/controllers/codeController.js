@@ -47,7 +47,7 @@ const normalizeJavaCode = (code) => {
   return code.replace(/public\s+class\s+\w+/, "public class Main");
 };
 
-// Submit to Judge0 and poll for result
+// Submit to Judge0 and poll for result with exponential backoff
 const runWithJudge0 = async (code, languageId, stdin = "") => {
   const submitRes = await axios.post(
     `${JUDGE0_URL}/submissions?base64_encoded=false&wait=false`,
@@ -58,9 +58,12 @@ const runWithJudge0 = async (code, languageId, stdin = "") => {
   const token = submitRes.data?.token;
   if (!token) throw new Error("Failed to create Judge0 submission — no token returned");
 
-  // Poll until done (max 15 attempts, 1.5s apart = ~22s max)
-  for (let i = 0; i < 15; i++) {
-    await new Promise((r) => setTimeout(r, 1500));
+  // Exponential backoff: 300ms → 500ms → 800ms → 1200ms → 1500ms (capped)
+  // Most code finishes in the first 1–2 polls instead of always waiting 1.5s
+  const delays = [300, 500, 800, 1200, 1500, 1500, 1500, 1500, 1500, 1500, 1500, 1500, 1500, 1500, 1500];
+
+  for (let i = 0; i < delays.length; i++) {
+    await new Promise((r) => setTimeout(r, delays[i]));
 
     const { data } = await axios.get(
       `${JUDGE0_URL}/submissions/${token}?base64_encoded=false`,
@@ -75,13 +78,12 @@ const runWithJudge0 = async (code, languageId, stdin = "") => {
     // compile error (Java, C++, C, TypeScript)
     if (compile_output) return { success: false, output: compile_output.trimEnd() };
 
-    // runtime error — stderr is still useful output (e.g. Python tracebacks)
+    // runtime error
     if (status.id !== 3) {
       const errOut = stderr || message || `Execution failed: ${status.description}`;
       return { success: false, output: errOut.trimEnd() };
     }
 
-    // success — show stdout, fall back to stderr (some programs write to stderr normally)
     const out = stdout || stderr || "Code executed successfully. No output.";
     return { success: true, output: out.trimEnd() };
   }

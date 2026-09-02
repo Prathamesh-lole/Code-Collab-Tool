@@ -37,7 +37,7 @@ function Avatar({ name, color, size = 28 }) {
 export default function LandingPage() {
   const navigate = useNavigate();
   const canvasRef = useRef(null);
-  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
+  const glowRef = useRef(null);
   const [heroVisible, setHeroVisible] = useState(false);
 
   /* ── Subtle ambient canvas particle layer ── */
@@ -55,7 +55,7 @@ export default function LandingPage() {
     resize();
     window.addEventListener("resize", resize);
 
-    for (let i = 0; i < 55; i++) {
+    for (let i = 0; i < 35; i++) {
       particles.push({
         x:  Math.random() * window.innerWidth,
         y:  Math.random() * window.innerHeight,
@@ -88,11 +88,23 @@ export default function LandingPage() {
     };
   }, []);
 
-  /* ── Cursor glow follow ── */
+  /* ── Cursor glow follow — ref-based, zero React re-renders ── */
   useEffect(() => {
-    const move = (e) => setCursorPos({ x: e.clientX, y: e.clientY });
-    window.addEventListener("mousemove", move);
-    return () => window.removeEventListener("mousemove", move);
+    const el = glowRef.current;
+    if (!el) return;
+    let rafId;
+    const move = (e) => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        el.style.left = `${e.clientX - 300}px`;
+        el.style.top  = `${e.clientY - 300}px`;
+      });
+    };
+    window.addEventListener("mousemove", move, { passive: true });
+    return () => {
+      window.removeEventListener("mousemove", move);
+      cancelAnimationFrame(rafId);
+    };
   }, []);
 
   /* ── Entry animation ── */
@@ -106,14 +118,8 @@ export default function LandingPage() {
       {/* Particle canvas */}
       <canvas ref={canvasRef} style={s.canvas} />
 
-      {/* Cursor radial glow */}
-      <div
-        style={{
-          ...s.cursorGlow,
-          left: cursorPos.x - 300,
-          top:  cursorPos.y - 300,
-        }}
-      />
+      {/* Cursor radial glow — driven by ref, no re-renders */}
+      <div ref={glowRef} style={s.cursorGlow} />
 
       {/* Ambient radial gradients */}
       <div style={s.ambient} />
@@ -367,6 +373,7 @@ const s = {
     pointerEvents: "none",
     zIndex: 0,
     opacity: 0.6,
+    willChange: "transform", // promote to GPU layer
   },
   cursorGlow: {
     position: "fixed",
@@ -376,7 +383,9 @@ const s = {
     background: "radial-gradient(circle, rgba(16,185,129,0.06) 0%, transparent 70%)",
     pointerEvents: "none",
     zIndex: 1,
-    transition: "left 0.12s ease, top 0.12s ease",
+    willChange: "left, top", // GPU compositing — no layout recalc
+    left: "-600px",
+    top: "-600px",
   },
   ambient: {
     position: "fixed",

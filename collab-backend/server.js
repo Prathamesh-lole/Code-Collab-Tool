@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const compression = require("compression");
 const dotenv = require("dotenv");
 const http = require("http");
 const { Server } = require("socket.io");
@@ -44,6 +45,7 @@ const corsOptions = {
   credentials: true,
 };
 
+app.use(compression()); // gzip all responses — reduces JSON payload by ~70%
 app.use(cors(corsOptions));
 app.use(express.json());
 
