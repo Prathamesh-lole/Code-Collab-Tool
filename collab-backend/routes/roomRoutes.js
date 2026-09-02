@@ -7,9 +7,13 @@ const {
   getRoomByKey,
   updateRoomCodeByKey,
   updateRoomLanguageByKey,
+  getMyRooms,
+  deleteRoom,
 } = require("../controllers/roomController");
 
 router.post("/create", authMiddleware, createRoom);
+router.get("/my-rooms", authMiddleware, getMyRooms);
+router.delete("/:roomKey", authMiddleware, deleteRoom);
 router.get("/key/:roomKey", getRoomByKey);
 router.put("/key/:roomKey/code", updateRoomCodeByKey);
 router.put("/key/:roomKey/language", updateRoomLanguageByKey);

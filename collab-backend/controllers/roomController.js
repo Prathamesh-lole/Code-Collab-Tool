@@ -74,8 +74,50 @@ exports.updateRoomCodeByKey = (req, res) => {
   );
 };
 
-// Update room language by room_key
-exports.updateRoomLanguageByKey = (req, res) => {
+// Get all rooms created by the logged-in user
+exports.getMyRooms = (req, res) => {
+  const userId = req.user.id;
+
+  db.query(
+    `SELECT r.id, r.room_name, r.room_key, r.language, r.created_at,
+      (SELECT COUNT(*) FROM files f WHERE f.room_key = r.room_key) AS file_count
+     FROM rooms r
+     WHERE r.created_by = ?
+     ORDER BY r.created_at DESC`,
+    [userId],
+    (err, results) => {
+      if (err) return res.status(500).json({ message: "Database error" });
+      res.json(results);
+    }
+  );
+};
+
+// Delete a room by room_key (only the creator can delete)
+exports.deleteRoom = (req, res) => {
+  const { roomKey } = req.params;
+  const userId = req.user.id;
+
+  // Verify ownership first
+  db.query(
+    "SELECT id FROM rooms WHERE room_key = ? AND created_by = ?",
+    [roomKey, userId],
+    (err, result) => {
+      if (err) return res.status(500).json({ message: "Database error" });
+      if (result.length === 0)
+        return res.status(403).json({ message: "Room not found or you are not the owner" });
+
+      // Delete files first (FK safety)
+      db.query("DELETE FROM files WHERE room_key = ?", [roomKey], (err2) => {
+        if (err2) return res.status(500).json({ message: "Failed to delete room files" });
+
+        db.query("DELETE FROM rooms WHERE room_key = ?", [roomKey], (err3) => {
+          if (err3) return res.status(500).json({ message: "Failed to delete room" });
+          res.json({ message: "Room deleted successfully" });
+        });
+      });
+    }
+  );
+};
   const { roomKey } = req.params;
   const { language } = req.body;
 
