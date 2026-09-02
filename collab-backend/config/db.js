@@ -21,6 +21,7 @@ if (process.env.DATABASE_URL) {
       enableKeepAlive:    true,
       keepAliveInitialDelay: 10000,
     };
+    console.log("Connecting to DB host:", url.hostname);
   } catch (e) {
     console.error("Invalid DATABASE_URL format:", e.message);
     process.exit(1);
